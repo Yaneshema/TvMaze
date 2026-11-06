@@ -1,0 +1,30 @@
+<header>
+  <h1>TVMaze</h1>
+
+  <form (ngSubmit)="search()">
+    <input
+      type="text"
+      name="query"
+      placeholder="Search TV shows..."
+      [(ngModel)]="query"
+    />
+
+    <button type="submit">Search</button>
+  </form>
+</header>
+
+<main>
+  @if (loading) {
+    <p>Loading shows...</p>
+  }
+
+  @if (error) {
+    <p>{{ error }}</p>
+  }
+
+  @if (!loading && !error && shows.length === 0) {
+    <p>No shows found.</p>
+  }
+
+  <app-card [shows]="shows"></app-card>
+</main>

@@ -1,0 +1,34 @@
+<div class="shows-grid">
+  @for (show of shows; track show.id) {
+    <a class="show-card" [routerLink]="['/details', show.id]">
+
+      <div class="show-image">
+        @if (show.image) {
+          <img [src]="show.image.medium" [alt]="show.name">
+        } @else {
+          <div class="no-image">
+            No image available
+          </div>
+        }
+      </div>
+
+      <div class="show-info">
+        <h2>{{ show.name }}</h2>
+
+        <div class="show-rating">
+          <span class="star">★</span>
+          <span>{{ show.rating.average ?? 'N/A' }}</span>
+        </div>
+
+        <div class="show-genres">
+          @for (genre of show.genres; track genre) {
+            <span class="genre">{{ genre }}</span>
+          }
+        </div>
+
+        <p class="show-status">{{ show.status }}</p>
+      </div>
+
+    </a>
+  }
+</div>

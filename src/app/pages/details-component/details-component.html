@@ -1,0 +1,182 @@
+
+<a routerLink="/" class="back-button">
+  ← Back to shows
+</a>
+
+@if (loading) {
+  <p class="message">Loading show details...</p>
+}
+
+@if (error) {
+  <p class="message">{{ error }}</p>
+}
+
+@if (show; as currentShow) {
+  <div class="details-container">
+
+    @if (currentShow.image) {
+      <img
+        class="show-image"
+        [src]="currentShow.image.original"
+        [alt]="currentShow.name"
+      />
+    }
+
+    <div class="show-info">
+      <h1>{{ currentShow.name }}</h1>
+
+      <p class="rating">
+        ★ {{ currentShow.rating.average ?? 'N/A' }}
+      </p>
+
+      <p class="genres">
+        {{ currentShow.genres.join(' • ') }}
+      </p>
+
+      <div class="details-grid">
+        <div>
+          <span>Status</span>
+          <strong>{{ currentShow.status }}</strong>
+        </div>
+
+        <div>
+          <span>Language</span>
+          <strong>{{ currentShow.language }}</strong>
+        </div>
+
+        <div>
+          <span>Premiered</span>
+          <strong>{{ currentShow.premiered ?? 'Unknown' }}</strong>
+        </div>
+
+        <div>
+          <span>Ended</span>
+          <strong>{{ currentShow.ended ?? 'Ongoing' }}</strong>
+        </div>
+
+        <div>
+          <span>Runtime</span>
+          <strong>
+            {{ currentShow.runtime ?? 'Unknown' }}
+            @if (currentShow.runtime) {
+              min
+            }
+          </strong>
+        </div>
+      </div>
+
+      <h2>Synopsis</h2>
+
+      <div
+        class="summary"
+        [innerHTML]="currentShow.summary || 'No description available.'"
+      ></div>
+
+      @if (currentShow.officialSite) {
+        <a
+          class="official-link"
+          [href]="currentShow.officialSite"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Official website ↗
+        </a>
+      }
+    </div>
+  </div>
+}
+
+<section class="episodes-section">
+
+  <div class="episodes-header">
+    <h2>Episodes</h2>
+    <span>{{ episodes.length }} episodes</span>
+  </div>
+
+  @if (episodesLoading) {
+    <p class="episodes-message">Loading episodes...</p>
+  }
+
+  @if (episodesError) {
+    <p class="episodes-message error">{{ episodesError }}</p>
+  }
+
+  @if (!episodesLoading && !episodesError && episodes.length === 0) {
+    <p class="episodes-message">No episodes found.</p>
+  }
+
+  @for (season of seasons; track season.season) {
+
+    <div class="season-section">
+
+      <h3>
+        {{ season.season === 0 ? 'Specials' : 'Season ' + season.season }}
+        <span>{{ season.episodes.length }} episodes</span>
+      </h3>
+
+      <div class="episodes-grid">
+
+        @for (episode of season.episodes; track episode.id) {
+
+          <article class="episode-card">
+
+            <div class="episode-image">
+              @if (episode.image) {
+                <img
+                  [src]="episode.image.medium"
+                  [alt]="episode.name"
+                  loading="lazy"
+                >
+              } @else {
+                <div class="no-image">
+                  No image available
+                </div>
+              }
+            </div>
+
+            <div class="episode-info">
+
+              <div class="episode-title">
+                <span class="episode-number">
+                  {{ episode.number === null
+                    ? 'Special'
+                    : 'E' + episode.number }}
+                </span>
+
+                <h4>{{ episode.name }}</h4>
+              </div>
+
+              <div class="episode-meta">
+                @if (episode.airdate) {
+                  <span>{{ episode.airdate }}</span>
+                }
+
+                @if (episode.runtime) {
+                  <span>{{ episode.runtime }} min</span>
+                }
+              </div>
+
+              @if (episode.summary) {
+                <div
+                  class="episode-summary"
+                  [innerHTML]="episode.summary">
+                </div>
+              } @else {
+                <p class="episode-summary">
+                  No description available.
+                </p>
+              }
+
+            </div>
+
+          </article>
+
+        }
+
+      </div>
+
+    </div>
+
+  }
+
+</section>
